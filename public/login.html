@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In | VisionBank Demo</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <main class="page" data-testid="login-page">
+      <section class="card" aria-labelledby="login-title">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">VB</div>
+          <div>
+            <h1>VisionBank</h1>
+            <p>Client demo portal</p>
+          </div>
+        </div>
+
+        <h2 id="login-title">Sign in</h2>
+        <p class="subtitle">Use demo credentials to access the dashboard.</p>
+
+        <div
+          id="login-error"
+          class="error-message"
+          role="alert"
+          data-testid="login-error"
+        >
+          Invalid email or password. Try demo@visionbank.com / demo1234
+        </div>
+
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              placeholder="demo@visionbank.com"
+              data-testid="email-input"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+              data-testid="password-input"
+              required
+            />
+          </div>
+
+          <button type="submit" data-testid="login-button">Sign in</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="/js/login.js"></script>
+  </body>
+</html>

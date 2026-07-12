@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | VisionBank Demo</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <main class="page" data-testid="dashboard-page">
+      <section class="dashboard">
+        <header class="dashboard-header">
+          <div>
+            <h1>Welcome back</h1>
+            <p id="welcome-message" data-testid="welcome-message">
+              Signed in as demo@visionbank.com
+            </p>
+          </div>
+          <a
+            href="/login"
+            class="button-link logout-button"
+            data-testid="logout-button"
+          >
+            Sign out
+          </a>
+        </header>
+
+        <div class="stats-grid">
+          <article class="stat-card" data-testid="stat-active-accounts">
+            <div class="stat-label">Active accounts</div>
+            <div class="stat-value">12,480</div>
+          </article>
+          <article class="stat-card" data-testid="stat-pending-reviews">
+            <div class="stat-label">Pending reviews</div>
+            <div class="stat-value">37</div>
+          </article>
+          <article class="stat-card" data-testid="stat-success-rate">
+            <div class="stat-label">Success rate</div>
+            <div class="stat-value">99.2%</div>
+          </article>
+        </div>
+
+        <section class="panel" aria-labelledby="activity-title">
+          <h2 id="activity-title">Recent activity</h2>
+          <ul class="activity-list" data-testid="activity-list">
+            <li>
+              <span>Wire transfer approved</span>
+              <span class="status-pill">Completed</span>
+            </li>
+            <li>
+              <span>New savings account opened</span>
+              <span class="status-pill">Completed</span>
+            </li>
+            <li>
+              <span>Loan application submitted</span>
+              <span class="status-pill">Completed</span>
+            </li>
+          </ul>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
