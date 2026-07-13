@@ -10,8 +10,10 @@
     "test:headed": "playwright test --headed"
   },
   "devDependencies": {
+    "@applitools/eyes-playwright": "^1.47.11",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.4.0",
+    "adams-skills": "github:applitools/adams-skills",
     "serve": "^14.2.4"
   }
 }
