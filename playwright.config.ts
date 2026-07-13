@@ -15,7 +15,8 @@ export default defineConfig({
       appName: 'VisionBank Demo',
     },
     figmaBaselines: {
-      'login page': '',
+      'login page':
+        'https://www.figma.com/design/deHkeywzAFHk31O9GJGLK2/Chandan-Jagdeesh-s-team-library?node-id=3337-72',
     },
   },
   projects: [
