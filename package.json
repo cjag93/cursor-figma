@@ -13,7 +13,8 @@
     "@applitools/eyes-playwright": "^1.47.11",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.4.0",
-    "adams-skills": "github:applitools/adams-skills",
+    "adams-skills": "git+https://github.com/applitools/adams-skills.git",
+    "dotenv": "^16.6.1",
     "serve": "^14.2.4"
   }
 }
