@@ -1,4 +1,19 @@
+import path from 'path';
 import { test } from '@applitools/eyes-playwright/fixture';
+import type { Eyes as BaseEyes } from '@applitools/eyes-playwright';
+import { setFigmaBaseline } from 'adams-skills/figma';
+
+const figmaCachePath = path.join(process.cwd(), '.figma-cache');
+
+let figmaBaselines: Record<string, string | string[]> | undefined;
+
+test.beforeEach(async ({ eyes }, testInfo) => {
+  figmaBaselines ??= (testInfo.project.use as { figmaBaselines?: Record<string, string | string[]> }).figmaBaselines ?? {};
+  await setFigmaBaseline((eyes as unknown as BaseEyes).configuration, figmaBaselines, {
+    configFilePath: testInfo.config.configFile,
+    tempPath: figmaCachePath,
+  });
+});
 
 test('login page', async ({ page, eyes }) => {
   await page.goto('/login');

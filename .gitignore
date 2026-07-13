@@ -5,3 +5,6 @@ node_modules/
 /playwright/.cache/
 .env
 .DS_Store
+
+# Figma API image/cache files (adams-skills setFigmaBaseline)
+.figma-cache/

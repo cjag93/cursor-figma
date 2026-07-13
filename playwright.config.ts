@@ -14,6 +14,9 @@ export default defineConfig({
     eyesConfig: {
       appName: 'VisionBank Demo',
     },
+    figmaBaselines: {
+      'login page': '',
+    },
   },
   projects: [
     {

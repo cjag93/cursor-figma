@@ -2,7 +2,7 @@ name: Applitools Visual Tests
 
 on:
   pull_request:
-    branches: [tests, main, master]
+    branches: [tests, main, master, figma]
 
 concurrency:
   group: applitools-${{ github.event.pull_request.number || github.ref }}
@@ -22,6 +22,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Use HTTPS for GitHub git dependencies
+        run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
