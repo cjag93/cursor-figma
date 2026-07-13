@@ -7,57 +7,93 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <main class="page" data-testid="dashboard-page">
-      <section class="dashboard">
-        <header class="dashboard-header">
-          <div>
-            <h1>Welcome back</h1>
-            <p id="welcome-message" data-testid="welcome-message">
-              Signed in as demo@visionbank.com
-            </p>
-          </div>
-          <a
-            href="/login"
-            class="button-link logout-button"
-            data-testid="logout-button"
-          >
-            Sign out
-          </a>
-        </header>
-
-        <div class="stats-grid">
-          <article class="stat-card" data-testid="stat-active-accounts">
-            <div class="stat-label">Active accounts</div>
-            <div class="stat-value">12,480</div>
-          </article>
-          <article class="stat-card" data-testid="stat-pending-reviews">
-            <div class="stat-label">Pending reviews</div>
-            <div class="stat-value">37</div>
-          </article>
-          <article class="stat-card" data-testid="stat-success-rate">
-            <div class="stat-label">Success rate</div>
-            <div class="stat-value">99.2%</div>
-          </article>
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">VB</div>
+        <div>
+          <h1>VisionBank</h1>
+          <p>Client demo portal</p>
         </div>
+      </div>
+    </header>
 
-        <section class="panel" aria-labelledby="activity-title">
-          <h2 id="activity-title">Recent activity</h2>
-          <ul class="activity-list" data-testid="activity-list">
-            <li>
-              <span>Wire transfer approved</span>
-              <span class="status-pill">Completed</span>
-            </li>
-            <li>
-              <span>New savings account opened</span>
-              <span class="status-pill">Completed</span>
-            </li>
-            <li>
-              <span>Loan application submitted</span>
-              <span class="status-pill">Completed</span>
-            </li>
-          </ul>
+    <main class="page page--dashboard" data-testid="dashboard-page">
+      <div class="dashboard-shell">
+        <section class="dashboard">
+          <header class="dashboard-header">
+            <div>
+              <h1>Welcome back</h1>
+              <p id="welcome-message" data-testid="welcome-message">
+                Signed in as demo@visionbank.com
+              </p>
+            </div>
+            <a
+              href="/login"
+              class="button-link logout-button"
+              data-testid="logout-button"
+            >
+              Sign out
+            </a>
+          </header>
+
+          <div class="stats-grid">
+            <article class="stat-card stat-card--accounts" data-testid="stat-active-accounts">
+              <div class="stat-label">Active accounts</div>
+              <div class="stat-value">12,480</div>
+              <div class="stat-trend">↑ 4.2% this month</div>
+            </article>
+            <article class="stat-card stat-card--reviews" data-testid="stat-pending-reviews">
+              <div class="stat-label">Pending reviews</div>
+              <div class="stat-value">37</div>
+              <div class="stat-trend">↓ 12 since yesterday</div>
+            </article>
+            <article class="stat-card stat-card--success" data-testid="stat-success-rate">
+              <div class="stat-label">Success rate</div>
+              <div class="stat-value">99.2%</div>
+              <div class="stat-trend">↑ 0.3% improvement</div>
+            </article>
+          </div>
+
+          <section class="panel" aria-labelledby="activity-title">
+            <div class="panel-header">
+              <h2 id="activity-title">Recent activity</h2>
+              <span class="panel-badge">Last 24 hours</span>
+            </div>
+            <ul class="activity-list" data-testid="activity-list">
+              <li>
+                <div class="activity-item">
+                  <span class="activity-icon" aria-hidden="true">💸</span>
+                  <div class="activity-text">
+                    <span class="activity-title">Wire transfer approved</span>
+                    <span class="activity-time">2 hours ago</span>
+                  </div>
+                </div>
+                <span class="status-pill">Completed</span>
+              </li>
+              <li>
+                <div class="activity-item">
+                  <span class="activity-icon" aria-hidden="true">🏦</span>
+                  <div class="activity-text">
+                    <span class="activity-title">New savings account opened</span>
+                    <span class="activity-time">5 hours ago</span>
+                  </div>
+                </div>
+                <span class="status-pill">Completed</span>
+              </li>
+              <li>
+                <div class="activity-item">
+                  <span class="activity-icon" aria-hidden="true">📋</span>
+                  <div class="activity-text">
+                    <span class="activity-title">Loan application submitted</span>
+                    <span class="activity-time">Yesterday</span>
+                  </div>
+                </div>
+                <span class="status-pill">Completed</span>
+              </li>
+            </ul>
+          </section>
         </section>
-      </section>
+      </div>
     </main>
   </body>
 </html>

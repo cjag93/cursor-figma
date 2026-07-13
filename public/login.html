@@ -7,58 +7,95 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <main class="page" data-testid="login-page">
-      <section class="card" aria-labelledby="login-title">
-        <div class="brand">
-          <div class="brand-mark" aria-hidden="true">VB</div>
-          <div>
-            <h1>VisionBank</h1>
-            <p>Client demo portal</p>
+    <main class="page page--split" data-testid="login-page">
+      <div class="login-layout">
+        <aside class="login-hero" aria-hidden="true">
+          <div class="login-hero-content">
+            <div class="brand">
+              <div class="brand-mark">VB</div>
+              <div>
+                <h1>VisionBank</h1>
+                <p>Client demo portal</p>
+              </div>
+            </div>
+
+            <h2>Banking made clear and confident</h2>
+            <p>
+              A modern client portal for account insights, activity tracking,
+              and secure sign-in — built for demos and visual testing.
+            </p>
+
+            <ul class="feature-list">
+              <li>
+                <span class="feature-icon" aria-hidden="true">🔒</span>
+                Secure authentication
+              </li>
+              <li>
+                <span class="feature-icon" aria-hidden="true">📊</span>
+                Real-time account overview
+              </li>
+              <li>
+                <span class="feature-icon" aria-hidden="true">⚡</span>
+                Instant activity updates
+              </li>
+            </ul>
           </div>
-        </div>
+        </aside>
 
-        <h2 id="login-title">Sign in</h2>
-        <p class="subtitle">Use demo credentials to access the dashboard.</p>
+        <section class="login-panel">
+          <div class="card" aria-labelledby="login-title">
+            <div class="brand">
+              <div class="brand-mark" aria-hidden="true">VB</div>
+              <div>
+                <h1>VisionBank</h1>
+                <p>Client demo portal</p>
+              </div>
+            </div>
 
-        <div
-          id="login-error"
-          class="error-message"
-          role="alert"
-          data-testid="login-error"
-        >
-          Invalid email or password. Try demo@visionbank.com / demo1234
-        </div>
+            <h2 id="login-title">Sign in</h2>
+            <p class="subtitle">Use demo credentials to access the dashboard.</p>
 
-        <form id="login-form" novalidate>
-          <div class="field">
-            <label for="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="username"
-              placeholder="demo@visionbank.com"
-              data-testid="email-input"
-              required
-            />
+            <div
+              id="login-error"
+              class="error-message"
+              role="alert"
+              data-testid="login-error"
+            >
+              Invalid email or password. Try demo@visionbank.com / demo1234
+            </div>
+
+            <form id="login-form" novalidate>
+              <div class="field">
+                <label for="email">Email</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="username"
+                  placeholder="demo@visionbank.com"
+                  data-testid="email-input"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="password">Password</label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="Enter your password"
+                  data-testid="password-input"
+                  required
+                />
+              </div>
+
+              <button type="submit" data-testid="login-button">Sign in</button>
+            </form>
           </div>
-
-          <div class="field">
-            <label for="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              placeholder="Enter your password"
-              data-testid="password-input"
-              required
-            />
-          </div>
-
-          <button type="submit" data-testid="login-button">Sign in</button>
-        </form>
-      </section>
+        </section>
+      </div>
     </main>
 
     <script src="/js/login.js"></script>

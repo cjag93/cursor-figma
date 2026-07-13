@@ -2,10 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="refresh" content="0; url=/login" />
     <title>VisionBank Demo</title>
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <p>Redirecting to <a href="/login">login</a>...</p>
+    <main class="redirect-page">
+      <div class="redirect-card">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">VB</div>
+        </div>
+        <div class="spinner" aria-hidden="true"></div>
+        <h1>VisionBank</h1>
+        <p>Redirecting to sign in...</p>
+        <a class="redirect-link" href="/login">Continue to login</a>
+      </div>
+    </main>
   </body>
 </html>
