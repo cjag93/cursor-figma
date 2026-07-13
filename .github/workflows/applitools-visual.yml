@@ -1,0 +1,45 @@
+name: Applitools Visual Tests
+
+on:
+  pull_request:
+    branches: [tests, main, master]
+
+concurrency:
+  group: applitools-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+  APPLITOOLS_BATCH_ID: ${{ github.event.pull_request.head.sha || github.sha }}
+  APPLITOOLS_BATCH_BUILD_ID: ${{ github.run_id }}
+  CI: true
+
+jobs:
+  visual-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Applitools visual tests
+        run: npx playwright test tests/login.visual.spec.ts --project=chromium
+
+      - name: Complete Applitools batch
+        if: always() && env.APPLITOOLS_API_KEY != ''
+        run: |
+          curl -fsS -X POST \
+            "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${APPLITOOLS_BATCH_ID}/${APPLITOOLS_BATCH_BUILD_ID}/complete?apiKey=${APPLITOOLS_API_KEY}"

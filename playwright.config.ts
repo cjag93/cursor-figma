@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
@@ -12,9 +13,6 @@ export default defineConfig({
     trace: 'on-first-retry',
     eyesConfig: {
       appName: 'VisionBank Demo',
-    },
-    figmaBaselines: {
-      'login page': '',
     },
   },
   projects: [
