@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Sign in to the VisionBank demo portal for account insights and secure banking."
+    />
     <title>Sign In | VisionBank Demo</title>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
@@ -19,9 +23,9 @@
               </div>
             </div>
 
-            <h2>Banking made clear and confident</h2>
+            <h2>Bank with clarity and confidence</h2>
             <p>
-              A modern client portal for account insights, activity tracking,
+              A polished client portal for account insights, activity tracking,
               and secure sign-in — built for demos and visual testing.
             </p>
 
@@ -53,7 +57,11 @@
             </div>
 
             <h2 id="login-title">Sign in</h2>
-            <p class="subtitle">Use demo credentials to access the dashboard.</p>
+            <p class="subtitle" id="login-subtitle">
+              Welcome back. Use the demo credentials below to access the dashboard.
+            </p>
+
+            <p class="demo-hint">Demo account: demo@visionbank.com / demo1234</p>
 
             <div
               id="login-error"
@@ -74,6 +82,8 @@
                   autocomplete="username"
                   placeholder="demo@visionbank.com"
                   data-testid="email-input"
+                  aria-describedby="login-subtitle"
+                  autofocus
                   required
                 />
               </div>
@@ -93,6 +103,10 @@
 
               <button type="submit" data-testid="login-button">Sign in</button>
             </form>
+
+            <p class="form-footer">
+              <a href="#" class="redirect-link">Forgot your password?</a>
+            </p>
           </div>
         </section>
       </div>
