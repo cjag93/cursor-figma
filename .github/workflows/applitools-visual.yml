@@ -8,16 +8,21 @@ concurrency:
   group: applitools-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
 env:
-  APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
   APPLITOOLS_BATCH_ID: ${{ github.event.pull_request.head.sha || github.sha }}
   APPLITOOLS_BATCH_BUILD_ID: ${{ github.run_id }}
   CI: true
+  HAS_APPLITOOLS_KEY: ${{ secrets.APPLITOOLS_API_KEY != '' }}
+  HAS_CURSOR_KEY: ${{ secrets.CURSOR_API_KEY != '' }}
 
 jobs:
   visual-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -36,10 +41,70 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Applitools visual tests
+        id: visual
+        continue-on-error: true
+        env:
+          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
         run: npx playwright test tests/login.visual.spec.ts --project=chromium
 
       - name: Complete Applitools batch
-        if: always() && env.APPLITOOLS_API_KEY != ''
+        if: always() && env.HAS_APPLITOOLS_KEY == 'true'
+        env:
+          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
         run: |
           curl -fsS -X POST \
             "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${APPLITOOLS_BATCH_ID}/${APPLITOOLS_BATCH_BUILD_ID}/complete?apiKey=${APPLITOOLS_API_KEY}"
+
+      - name: Install Cursor CLI
+        if: steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true'
+        run: |
+          curl https://cursor.com/install -fsS | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Inspect visual differences (read-only)
+        if: steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true'
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+        run: |
+          cursor-agent --print --force --trust --sandbox disabled --approve-mcps \
+            --output-format text \
+            "Inspect the Applitools Eyes batch at
+            https://eyes.applitools.com/app/test-results/${APPLITOOLS_BATCH_ID}
+
+            Use the Applitools MCP tools. Call eyes_review_progress with
+            mode inspect — never resolve, never accept, never reject, never
+            add or change match regions, never save. Follow each response's
+            next field until eyes_review_end reports the batch complete.
+
+            Write a markdown report of the visual differences and their likely
+            root cause to triage.md in the repository root. Do not modify any
+            other file." \
+            2>&1 | tee triage.log
+
+      - name: Upload inspect report
+        if: always() && hashFiles('triage.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: eyes-inspect-report
+          path: |
+            triage.md
+            triage.log
+
+      - name: Comment inspect report on the PR
+        if: github.event_name == 'pull_request' && hashFiles('triage.md') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "## Eyes inspect report"
+            echo
+            echo "Read-only review of batch [\`${APPLITOOLS_BATCH_ID}\`](https://eyes.applitools.com/app/test-results/${APPLITOOLS_BATCH_ID}). Nothing was accepted, rejected, or saved."
+            echo
+            cat triage.md
+          } > comment.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file comment.md
+
+      - name: Fail the job if visual tests failed
+        if: steps.visual.outcome == 'failure'
+        run: exit 1
