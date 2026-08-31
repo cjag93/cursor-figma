@@ -17,6 +17,7 @@ env:
   APPLITOOLS_BATCH_BUILD_ID: ${{ github.run_id }}
   CI: true
   HAS_APPLITOOLS_KEY: ${{ secrets.APPLITOOLS_API_KEY != '' }}
+  HAS_APPLITOOLS_READ_KEY: ${{ secrets.APPLITOOLS_READ_KEY != '' }}
   HAS_CURSOR_KEY: ${{ secrets.CURSOR_API_KEY != '' }}
 
 jobs:
@@ -70,31 +71,52 @@ jobs:
           fi
 
       - name: Install Cursor CLI
-        if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true'
+        if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && env.HAS_APPLITOOLS_READ_KEY == 'true'
         run: |
           curl https://cursor.com/install -fsS | bash
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
+      # MCP review tools need a read-scoped key. The capture secret is
+      # execute-only and returns 403 from eyes_review_progress.
       - name: Inspect visual differences (read-only)
-        if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true'
+        if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && env.HAS_APPLITOOLS_READ_KEY == 'true'
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
-          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+          APPLITOOLS_READ_KEY: ${{ secrets.APPLITOOLS_READ_KEY }}
+          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_READ_KEY }}
         run: |
           cursor-agent --print --force --trust --sandbox disabled --approve-mcps \
             --output-format text \
             "Inspect the Applitools Eyes batch at
             https://eyes.applitools.com/app/test-results/${APPLITOOLS_BATCH_ID}
 
-            Use the Applitools MCP tools. Call eyes_review_progress with
-            mode inspect — never resolve, never accept, never reject, never
-            add or change match regions, never save. Follow each response's
-            next field until eyes_review_end reports the batch complete.
+            Use the Applitools MCP tools with the read-scoped key already in
+            APPLITOOLS_API_KEY / APPLITOOLS_READ_KEY. Call
+            eyes_review_progress with mode inspect — never resolve, never
+            accept, never reject, never add or change match regions, never
+            save. Follow each response's next field until eyes_review_end
+            reports the batch complete.
 
             Write a markdown report of the visual differences and their likely
             root cause to triage.md in the repository root. Do not modify any
             other file." \
             2>&1 | tee triage.log
+
+      - name: Comment that inspect was skipped
+        if: always() && github.event_name == 'pull_request' && steps.visual.outcome == 'failure' && (env.HAS_CURSOR_KEY != 'true' || env.HAS_APPLITOOLS_READ_KEY != 'true')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --body "$(cat <<'EOF'
+          ## Eyes inspect skipped
+
+          Visual tests failed, but read-only MCP inspect did not run.
+
+          Add these GitHub Actions secrets, then re-run:
+          - `CURSOR_API_KEY` — Cursor API key for `cursor-agent`
+          - `APPLITOOLS_READ_KEY` — Applitools key with **read** permission (Admin → Teams → API Keys). The capture secret `APPLITOOLS_API_KEY` is execute-only and cannot call `eyes_review_progress`.
+          EOF
+          )"
 
       - name: Upload inspect report
         if: always() && hashFiles('triage.md') != ''
