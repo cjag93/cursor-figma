@@ -13,7 +13,7 @@
   <body>
     <main class="page page--split" data-testid="login-page">
       <div class="login-layout">
-        <aside class="login-hero" aria-hidden="true">
+        <aside class="login-hero">
           <div class="login-hero-content">
             <div class="brand">
               <div class="brand-mark">VB</div>
@@ -23,8 +23,10 @@
               </div>
             </div>
 
+            <span class="eyebrow">Private client banking</span>
+
             <h2>Bank with clarity and confidence</h2>
-            <p>
+            <p class="hero-lede">
               A polished client portal for account insights, activity tracking,
               and secure sign-in — built for demos and visual testing.
             </p>
@@ -32,17 +34,67 @@
             <ul class="feature-list">
               <li>
                 <span class="feature-icon" aria-hidden="true">🔒</span>
-                Secure authentication
+                <span>
+                  <strong>Secure authentication</strong>
+                  Multi-factor sign-in with device recognition
+                </span>
               </li>
               <li>
                 <span class="feature-icon" aria-hidden="true">📊</span>
-                Real-time account overview
+                <span>
+                  <strong>Real-time account overview</strong>
+                  Balances and holdings refreshed continuously
+                </span>
               </li>
               <li>
                 <span class="feature-icon" aria-hidden="true">⚡</span>
-                Instant activity updates
+                <span>
+                  <strong>Instant activity updates</strong>
+                  Transaction alerts the moment they post
+                </span>
               </li>
             </ul>
+
+            <div class="ticker" data-testid="market-ticker">
+              <div class="ticker-item">
+                <span class="ticker-symbol">S&amp;P 500</span>
+                <span class="ticker-value" data-live="ticker-spx">—</span>
+              </div>
+              <div class="ticker-item">
+                <span class="ticker-symbol">NASDAQ</span>
+                <span class="ticker-value" data-live="ticker-ndx">—</span>
+              </div>
+              <div class="ticker-item">
+                <span class="ticker-symbol">GOLD</span>
+                <span class="ticker-value" data-live="ticker-gold">—</span>
+              </div>
+            </div>
+
+            <figure class="testimonial" data-testid="testimonial">
+              <blockquote data-live="quote-text">—</blockquote>
+              <figcaption>
+                <span class="testimonial-avatar" aria-hidden="true" data-live="quote-initials">—</span>
+                <span>
+                  <strong data-live="quote-author">—</strong>
+                  <span class="testimonial-role" data-live="quote-role">—</span>
+                </span>
+              </figcaption>
+            </figure>
+
+            <div class="hero-metrics">
+              <div class="hero-metric">
+                <span class="hero-metric-value" data-live="active-sessions">—</span>
+                <span class="hero-metric-label">Sessions active now</span>
+              </div>
+              <div class="hero-metric">
+                <span class="hero-metric-value">99.98%</span>
+                <span class="hero-metric-label">Platform uptime</span>
+              </div>
+              <div class="hero-metric">
+                <span class="hero-metric-value">$4.2B</span>
+                <span class="hero-metric-label">Assets under care</span>
+              </div>
+            </div>
           </div>
         </aside>
 
@@ -54,6 +106,12 @@
                 <h1>VisionBank</h1>
                 <p>Client demo portal</p>
               </div>
+            </div>
+
+            <div class="status-row">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span>All systems operational</span>
+              <span class="status-time" data-live="clock">—</span>
             </div>
 
             <h2 id="login-title">Sign in</h2>
@@ -101,17 +159,46 @@
                 />
               </div>
 
+              <div class="field-row">
+                <a href="#" class="redirect-link">Forgot your password?</a>
+                <label class="checkbox">
+                  <input type="checkbox" id="remember" name="remember" />
+                  <span>Keep me signed in</span>
+                </label>
+              </div>
+
               <button type="submit" data-testid="login-button">Sign in</button>
             </form>
 
+            <div class="trust-row">
+              <span class="trust-badge">256-bit TLS</span>
+              <span class="trust-badge">SOC 2 Type II</span>
+              <span class="trust-badge">FDIC insured</span>
+            </div>
+
+            <div class="divider"><span>or continue with</span></div>
+
+            <div class="sso-row">
+              <button type="button" class="sso-button">
+                <span aria-hidden="true">🔑</span> Passkey
+              </button>
+              <button type="button" class="sso-button">
+                <span aria-hidden="true">🪪</span> SSO
+              </button>
+            </div>
+
             <p class="form-footer">
-              <a href="#" class="redirect-link">Forgot your password?</a>
+              Last security scan
+              <strong data-live="last-scan">—</strong>
+              · Session
+              <code data-live="session-ref">—</code>
             </p>
           </div>
         </section>
       </div>
     </main>
 
+    <script src="js/live.js"></script>
     <script src="js/login.js"></script>
   </body>
 </html>
