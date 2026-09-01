@@ -76,6 +76,7 @@ jobs:
         if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && env.HAS_APPLITOOLS_WRITE_KEY == 'true'
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          APPLITOOLS_READ_KEY: ${{ secrets.APPLITOOLS_READ_KEY || secrets.APPLITOOLS_WRITE_KEY }}
           APPLITOOLS_WRITE_KEY: ${{ secrets.APPLITOOLS_WRITE_KEY }}
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_WRITE_KEY }}
         run: |
