@@ -23,7 +23,7 @@ test.describe('Login page', () => {
   });
 
   test('navigates to dashboard with valid credentials', async ({ page }) => {
-    await page.getByTestId('email-input').fill('demo@visionbank.com');
+    await page.getByTestId('email-input').fill('user@visionbank.com');
     await page.getByTestId('password-input').fill('demo1234');
     await page.getByTestId('login-button').click();
 
