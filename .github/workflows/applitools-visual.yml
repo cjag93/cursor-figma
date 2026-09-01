@@ -87,8 +87,15 @@ jobs:
             field until eyes_review_end reports the batch complete.
 
             Accept every step. Mark intentional product changes in this
-            commit as expected (isExpected). For live or recurring values,
-            add a match region if one does not already cover that content.
+            commit as expected (isExpected).
+
+            Do not add dynamic match regions for same-size live values
+            (clock, tickers, counters). Those are already handled.
+
+            For copy that reflows — different line counts or box height,
+            including [data-testid=service-notice] — add a layout region
+            on the containing block. Do not mask that content as dynamic.
+
             If a diff is already inside an existing region, keep it and
             still accept — do not leave the step unresolved because a
             nested region could not be applied.
