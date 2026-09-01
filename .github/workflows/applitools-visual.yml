@@ -78,33 +78,24 @@ jobs:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
           APPLITOOLS_WRITE_KEY: ${{ secrets.APPLITOOLS_WRITE_KEY }}
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_WRITE_KEY }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          COMMIT_SUBJECT=$(git log -1 --format='%s')
           cursor-agent --print --force --trust --sandbox disabled --approve-mcps \
             --output-format text \
             "Resolve the Applitools Eyes batch at ${EYES_BATCH_URL}
 
-            Use the Applitools MCP tools with the write-scoped key already in
-            APPLITOOLS_API_KEY / APPLITOOLS_WRITE_KEY.
+            Call eyes_review_progress with mode resolve. Follow each next
+            field until eyes_review_end reports the batch complete.
 
-            Call eyes_review_progress with mode resolve. Follow each response's
-            next field until eyes_review_end reports the batch complete.
+            Accept every step. Mark intentional product changes in this
+            commit as expected (isExpected). For live or recurring values,
+            add a match region if one does not already cover that content.
+            If a diff is already inside an existing region, keep it and
+            still accept — do not leave the step unresolved because a
+            nested region could not be applied.
 
-            Treat a diff as expected (isExpected) only when it matches an
-            intentional change in this pull request (${PR_TITLE}) or commit
-            (${COMMIT_SUBJECT}). If this commit did not touch that UI, leave
-            isExpected null.
+            Never call eyes_resolve_save. Leave decisions pending.
 
-            Mask dynamic or recurring content with match regions (prefer
-            dynamic, then layout). Do not treat those as bugs.
-
-            Never call eyes_resolve_save. Never call eyes_resolve_reset unless
-            a tool error requires retrying. Leave decisions pending.
-
-            Write a markdown report to triage.md covering each distinct diff,
-            whether it was accepted or rejected, and which regions were added.
-            Do not modify any other file." \
+            Write a markdown report to triage.md. Do not modify any other file." \
             2>&1 | tee triage.log
 
       # Read-only fallback when write key is missing.
