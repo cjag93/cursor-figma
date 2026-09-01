@@ -91,10 +91,14 @@ jobs:
             Call eyes_review_progress with mode resolve. Follow each response's
             next field until eyes_review_end reports the batch complete.
 
-            Treat a diff as expected (isExpected) only when it matches an
-            intentional change in this pull request (${PR_TITLE}) or commit
-            (${COMMIT_SUBJECT}). If this commit did not touch that UI, leave
-            isExpected null.
+            Copy or text diffs that match this pull request (${PR_TITLE}) or
+            commit (${COMMIT_SUBJECT}) may be expected (isExpected).
+
+            Color and styling diffs are unexpected in this run — including
+            the gold Sign in heading and the orange Sign in button. Do not
+            mark those as isExpected just because they appear in the commit.
+            Leave isExpected and isBug null so the steps stay unresolved
+            for human review.
 
             Mask dynamic or recurring content with match regions (prefer
             dynamic, then layout). Do not treat those as bugs.
