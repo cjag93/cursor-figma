@@ -82,6 +82,14 @@ const renderTestimonial = () => {
 
 const renderSessionDetails = () => {
   set('active-sessions', Math.round(randomBetween(840, 1960)).toLocaleString('en-US'));
+  set(
+    'platform-uptime',
+    `${randomBetween(99.9, 99.99).toFixed(2)}%`,
+  );
+  set(
+    'assets-under-care',
+    `$${randomBetween(4.1, 4.4).toFixed(1)}B`,
+  );
   set('last-scan', `${Math.round(randomBetween(2, 57))} minutes ago`);
 
   const reference = Array.from({ length: 3 }, () =>

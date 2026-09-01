@@ -83,6 +83,16 @@ jobs:
             --output-format text \
             "Resolve the Applitools Eyes batch at ${EYES_BATCH_URL}
 
+            Call eyes_review_progress with mode resolve. Follow each next
+            field until eyes_review_end reports the batch complete.
+
+            Accept every step. Mark intentional product changes in this
+            commit as expected (isExpected). For live or recurring values,
+            add a match region if one does not already cover that content.
+            If a diff is already inside an existing region, keep it and
+            still accept — do not leave the step unresolved because a
+            nested region could not be applied.
+
             Never call eyes_resolve_save. Leave decisions pending.
 
             Write a markdown report to triage.md. Do not modify any other file." \
