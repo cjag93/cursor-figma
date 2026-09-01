@@ -1,4 +1,4 @@
-const DEMO_EMAIL = 'demo@visionbank.com';
+const DEMO_EMAIL = 'user@visionbank.com';
 const DEMO_PASSWORD = 'demo1234';
 
 const form = document.getElementById('login-form');

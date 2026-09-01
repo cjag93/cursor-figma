@@ -14,9 +14,7 @@ permissions:
 
 env:
   APPLITOOLS_BATCH_ID: ${{ github.event.pull_request.head.sha || github.sha }}
-  APPLITOOLS_BATCH_BUILD_ID: ${{ github.run_id }}
   CI: true
-  HAS_APPLITOOLS_KEY: ${{ secrets.APPLITOOLS_API_KEY != '' }}
   HAS_APPLITOOLS_READ_KEY: ${{ secrets.APPLITOOLS_READ_KEY != '' }}
   HAS_APPLITOOLS_WRITE_KEY: ${{ secrets.APPLITOOLS_WRITE_KEY != '' }}
   HAS_CURSOR_KEY: ${{ secrets.CURSOR_API_KEY != '' }}
@@ -48,28 +46,6 @@ jobs:
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
         run: npx playwright test tests/login.visual.spec.ts --project=chromium
-
-      # Optional: tells Eyes the GitHub build is finished so it can update
-      # commit status. 404 means the Applitools GitHub app is not connected
-      # to this repo — inspect does not need that integration.
-      - name: Complete Applitools batch
-        if: always() && env.HAS_APPLITOOLS_KEY == 'true'
-        continue-on-error: true
-        env:
-          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
-        run: |
-          status=$(curl -sS -o /tmp/eyes-complete.out -w "%{http_code}" -X POST \
-            -H "accept:*/*" -d '' \
-            "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${APPLITOOLS_BATCH_ID}/${APPLITOOLS_BATCH_BUILD_ID}/complete?apiKey=${APPLITOOLS_API_KEY}")
-          echo "Applitools GitHub complete returned HTTP ${status}"
-          if [ "$status" = "404" ]; then
-            echo "No GitHub SCM integration for this batch; continuing to inspect."
-            exit 0
-          fi
-          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
-            cat /tmp/eyes-complete.out
-            exit 1
-          fi
 
       - name: Resolve Eyes batch URL
         if: always() && steps.visual.outcome == 'failure' && (env.HAS_APPLITOOLS_WRITE_KEY == 'true' || env.HAS_APPLITOOLS_READ_KEY == 'true')
@@ -115,15 +91,13 @@ jobs:
             Call eyes_review_progress with mode resolve. Follow each response's
             next field until eyes_review_end reports the batch complete.
 
-            This pull request (${PR_TITLE}) / commit (${COMMIT_SUBJECT}) made
-            intentional login-page CSS changes, including a larger Sign in
-            heading (2.25rem) and a teal Sign in button. Treat diffs that match
-            those code changes as expected (isExpected).
+            Treat a diff as expected (isExpected) only when it matches an
+            intentional change in this pull request (${PR_TITLE}) or commit
+            (${COMMIT_SUBJECT}). If this commit did not touch that UI, leave
+            isExpected null.
 
-            Live values from public/js/live.js (clock, market tickers,
-            rotating testimonial, session metrics, last-scan, session-ref)
-            are dynamic — add or keep match regions (prefer dynamic, then
-            layout). Do not treat those as bugs.
+            Mask dynamic or recurring content with match regions (prefer
+            dynamic, then layout). Do not treat those as bugs.
 
             Never call eyes_resolve_save. Never call eyes_resolve_reset unless
             a tool error requires retrying. Leave decisions pending.
