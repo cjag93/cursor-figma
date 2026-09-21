@@ -188,7 +188,7 @@ body::before {
 .brand-mark {
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: 50%;
   background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
   display: grid;
   place-items: center;
@@ -289,7 +289,7 @@ button,
   border: none;
   border-radius: 14px;
   letter-spacing: 0.02em;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
   color: white;
   font: inherit;
   font-weight: 600;

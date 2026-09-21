@@ -7,10 +7,11 @@
     "start": "serve public -l 3000",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed"
+    "test:headed": "playwright test --headed",
+    "test:nlp": "playwright test --project=chromium-nlp"
   },
   "devDependencies": {
-    "@applitools/eyes-playwright": "^1.47.11",
+    "@applitools/eyes-playwright": "^1.49.0",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.4.0",
     "dotenv": "^16.6.1",
