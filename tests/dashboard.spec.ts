@@ -8,7 +8,7 @@ test.describe('Dashboard page', () => {
   test('displays account overview', async ({ page }) => {
     await expect(page.getByTestId('dashboard-page')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
-    await expect(page.getByTestId('welcome-message')).toContainText('demo@visionbank.com');
+    await expect(page.getByTestId('welcome-message')).toContainText('user@visionbank.com');
     await expect(page.getByTestId('stat-active-accounts')).toContainText('12,480');
     await expect(page.getByTestId('stat-pending-reviews')).toContainText('37');
     await expect(page.getByTestId('stat-success-rate')).toContainText('99.2%');

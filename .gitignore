@@ -5,6 +5,8 @@ node_modules/
 /playwright/.cache/
 .env
 .DS_Store
+triage.md
+triage.log
 
 # Figma API cache (only used on figma branch)
 .figma-cache/
