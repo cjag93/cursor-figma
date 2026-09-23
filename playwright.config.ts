@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 
+const FIGMA_LOGIN =
+  'https://www.figma.com/design/deHkeywzAFHk31O9GJGLK2/Chandan-Jagdeesh-s-team-library?node-id=3337-72';
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -13,10 +16,14 @@ export default defineConfig({
     trace: 'on-first-retry',
     eyesConfig: {
       appName: 'VisionBank Demo',
-    },
-    figmaBaselines: {
-      'login page':
-        'https://www.figma.com/design/deHkeywzAFHk31O9GJGLK2/Chandan-Jagdeesh-s-team-library?node-id=3337-72',
+      // Playwright Fixtures: key is the test() title Eyes opens with.
+      // Unmapped tests (login page, dashboard, …) stay ordinary regressions.
+      figmaBaselines: {
+        'AEO-Test login vs Figma': FIGMA_LOGIN,
+      },
+      figmaOptions: {
+        mode: process.env.CI ? 'disabled' : 'auto-baseline',
+      },
     },
   },
   projects: [

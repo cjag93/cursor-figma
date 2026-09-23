@@ -7,7 +7,7 @@ test.describe('Login page', () => {
 
   test('displays the sign-in form', async ({ page }) => {
     await expect(page.getByTestId('login-page')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
+    await expect(page.getByTestId('login-button')).toHaveText('log in');
     await expect(page.getByTestId('email-input')).toBeVisible();
     await expect(page.getByTestId('password-input')).toBeVisible();
     await expect(page.getByTestId('login-button')).toBeVisible();

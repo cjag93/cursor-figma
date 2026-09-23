@@ -6,5 +6,5 @@ node_modules/
 .env
 .DS_Store
 
-# Figma API image/cache files (adams-skills setFigmaBaseline)
+# Figma Dev Comparison cache (figmaOptions.tempPath / APPLITOOLS_FIGMA_TEMP_PATH)
 .figma-cache/
