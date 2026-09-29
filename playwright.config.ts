@@ -16,6 +16,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     eyesConfig: {
       appName: 'VisionBank Portal',
+      matchLevel: 'Dynamic',
     },
   },
   projects: [
