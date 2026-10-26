@@ -1,8 +1,47 @@
 import 'dotenv/config';
+import { execSync } from 'node:child_process';
 import { defineConfig, devices } from '@playwright/test';
 
 // English-based steps only run in the project below, on Chromium.
 const NLP_SPECS = /.*\.nlp\.spec\.ts/;
+
+// The Eyes baseline every other branch is compared against.
+const BASELINE_BRANCH = 'tests';
+
+function currentGitBranch(): string | undefined {
+  // GITHUB_HEAD_REF is the PR's source branch; GITHUB_REF_NAME is the pushed branch.
+  const fromCi = process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME;
+  if (fromCi) return fromCi;
+  try {
+    const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
+    return branch && branch !== 'HEAD' ? branch : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+const gitBranch = process.env.APPLITOOLS_BRANCH || currentGitBranch() || BASELINE_BRANCH;
+
+// On the baseline branch, CI runs refresh the baseline: new tests and diffs are
+// saved automatically and never fail the run. Every other branch compares
+// against the latest baseline-branch baseline, ignoring anything accepted on
+// itself, so a PR always shows its difference from the baseline branch.
+const branchConfig =
+  gitBranch === BASELINE_BRANCH
+    ? {
+        branchName: BASELINE_BRANCH,
+        ...(process.env.CI && {
+          saveNewTests: true,
+          saveDiffs: true,
+          failTestsOnDiff: false as const,
+        }),
+      }
+    : {
+        branchName: gitBranch,
+        parentBranchName: BASELINE_BRANCH,
+        compareWithParentBranch: true,
+        ignoreGitMergeBase: true,
+      };
 
 // A project's `use.eyesConfig` replaces this object rather than merging into it,
 // so every project spreads it. `failTestsOnDiff` is spelled out because the
@@ -10,7 +49,8 @@ const NLP_SPECS = /.*\.nlp\.spec\.ts/;
 // only reaches a separate worker-scoped copy.
 const eyesConfig = {
   appName: 'VisionBank Demo',
-  failTestsOnDiff: (process.env.CI ? 'afterAll' : 'afterEach') as 'afterAll' | 'afterEach',
+  failTestsOnDiff: (process.env.CI ? 'afterAll' : 'afterEach') as 'afterAll' | 'afterEach' | false,
+  ...branchConfig,
 };
 
 export default defineConfig({
@@ -28,6 +68,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     eyesConfig: {
       appName: 'VisionBank Portal',
+      ...branchConfig,
     },
   },
   projects: [

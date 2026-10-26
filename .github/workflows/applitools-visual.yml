@@ -1,6 +1,10 @@
 name: Applitools Visual Tests
 
 on:
+  # Pushes to `tests` (including PR merges) refresh the Eyes baseline;
+  # PRs compare against it. See branchConfig in playwright.config.ts.
+  push:
+    branches: [tests]
   pull_request:
     branches: [tests, main, master]
 
@@ -48,7 +52,7 @@ jobs:
         run: npx playwright test tests/login.visual.spec.ts --project=chromium
 
       - name: Resolve Eyes batch URL
-        if: always() && steps.visual.outcome == 'failure' && (env.HAS_APPLITOOLS_WRITE_KEY == 'true' || env.HAS_APPLITOOLS_READ_KEY == 'true')
+        if: always() && github.event_name == 'pull_request' && steps.visual.outcome == 'failure' && (env.HAS_APPLITOOLS_WRITE_KEY == 'true' || env.HAS_APPLITOOLS_READ_KEY == 'true')
         env:
           APPLITOOLS_LOOKUP_KEY: ${{ secrets.APPLITOOLS_WRITE_KEY || secrets.APPLITOOLS_READ_KEY }}
         run: |
@@ -64,7 +68,7 @@ jobs:
           echo "Using Eyes batch URL ${url}"
 
       - name: Install Cursor CLI
-        if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && (env.HAS_APPLITOOLS_WRITE_KEY == 'true' || env.HAS_APPLITOOLS_READ_KEY == 'true')
+        if: always() && github.event_name == 'pull_request' && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && (env.HAS_APPLITOOLS_WRITE_KEY == 'true' || env.HAS_APPLITOOLS_READ_KEY == 'true')
         run: |
           curl https://cursor.com/install -fsS | bash
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
@@ -73,7 +77,7 @@ jobs:
       # Do not save — pending decisions stay undoable until someone saves
       # in Eyes or a gated workflow calls eyes_resolve_save.
       - name: Resolve visual differences
-        if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && env.HAS_APPLITOOLS_WRITE_KEY == 'true'
+        if: always() && github.event_name == 'pull_request' && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && env.HAS_APPLITOOLS_WRITE_KEY == 'true'
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
           APPLITOOLS_READ_KEY: ${{ secrets.APPLITOOLS_READ_KEY || secrets.APPLITOOLS_WRITE_KEY }}
@@ -91,7 +95,7 @@ jobs:
 
       # Read-only fallback when write key is missing.
       - name: Inspect visual differences (read-only)
-        if: always() && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && env.HAS_APPLITOOLS_WRITE_KEY != 'true' && env.HAS_APPLITOOLS_READ_KEY == 'true'
+        if: always() && github.event_name == 'pull_request' && steps.visual.outcome == 'failure' && env.HAS_CURSOR_KEY == 'true' && env.HAS_APPLITOOLS_WRITE_KEY != 'true' && env.HAS_APPLITOOLS_READ_KEY == 'true'
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
           APPLITOOLS_READ_KEY: ${{ secrets.APPLITOOLS_READ_KEY }}
